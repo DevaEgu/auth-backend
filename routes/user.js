@@ -13,6 +13,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// GET all users (protected route)
+router.get('/', async (req, res) => {
+  try {
+    const users = await User.find({}, { password: 0 }); // Exclude passwords from response
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch users', error: error.message });
+  }
+});
+
 // GET user profile
 router.get('/profile', verifyToken, async (req, res) => {
   try {
